@@ -44,12 +44,11 @@ const Configure = () => {
     }
 
     try {
-      const response = await fetch("https://nsolbpo.app.n8n.cloud/webhook-test/7b56375e-3d1c-4e5c-9de8-7d7dc4dedc1e", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const params = new URLSearchParams(formData as any).toString();
+      const url = `https://nsolbpo.app.n8n.cloud/webhook-test/7b56375e-3d1c-4e5c-9de8-7d7dc4dedc1e?${params}`;
+      
+      const response = await fetch(url, {
+        method: "GET",
       });
 
       if (!response.ok) {
