@@ -31,7 +31,7 @@ const Configure = () => {
     maxTimeout: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.companyName || !formData.phoneNumber || !formData.voice || !formData.model) {
@@ -43,7 +43,32 @@ const Configure = () => {
       return;
     }
 
-    navigate("/success", { state: { formData } });
+    try {
+      const response = await fetch("https://nsolbpo.app.n8n.cloud/webhook-test/7b56375e-3d1c-4e5c-9de8-7d7dc4dedc1e", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to send data");
+      }
+
+      toast({
+        title: "Success!",
+        description: "Your AI Voice Agent configuration has been submitted.",
+      });
+
+      navigate("/success", { state: { formData } });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to submit configuration. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const updateField = (field: string, value: string) => {
